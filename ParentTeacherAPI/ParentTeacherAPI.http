@@ -1,0 +1,6 @@
+@ParentTeacherAPI_HostAddress = http://localhost:5029
+
+GET {{ParentTeacherAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
