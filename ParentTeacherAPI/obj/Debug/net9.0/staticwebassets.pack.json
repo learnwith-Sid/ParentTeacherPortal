@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png",
+      "PackagePath": "staticwebassets/uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png"
+    },
+    {
+      "Id": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/edit.png",
+      "PackagePath": "staticwebassets/uploads/edit.png"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.ParentTeacherAPI.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.ParentTeacherAPI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.build.ParentTeacherAPI.props",
+      "PackagePath": "build\\ParentTeacherAPI.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.ParentTeacherAPI.props",
+      "PackagePath": "buildMultiTargeting\\ParentTeacherAPI.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.ParentTeacherAPI.props",
+      "PackagePath": "buildTransitive\\ParentTeacherAPI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

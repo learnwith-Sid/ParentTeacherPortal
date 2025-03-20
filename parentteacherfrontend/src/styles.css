@@ -1,0 +1,48 @@
+/* styles.css */
+
+  * {
+    pointer-events: auto !important;
+    user-select: auto !important;
+  }
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-wrap: nowrap;
+  }
+  .sidebar-logo {
+    max-width: 50px;
+    max-height: 50px;
+    object-fit: contain;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .sidebar-platform-name {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    flex-grow: 1;
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 200px;
+    }
+    .sidebar-platform-name {
+      max-width: 120px;
+      font-size: 14px;
+    }
+    .sidebar-logo {
+      max-width: 40px;
+      max-height: 40px;
+    }
+  }

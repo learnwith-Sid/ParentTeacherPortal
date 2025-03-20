@@ -1,0 +1,228 @@
+{
+  "Version": 1,
+  "Hash": "8tnvnQ6e6wYNI6q0B632CfrQOmygJxtFnE/hTkVGs48=",
+  "Source": "ParentTeacherAPI",
+  "BasePath": "_content/ParentTeacherAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ParentTeacherAPI/wwwroot",
+      "Source": "ParentTeacherAPI",
+      "ContentRoot": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/",
+      "BasePath": "_content/ParentTeacherAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png",
+      "SourceId": "ParentTeacherAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/",
+      "BasePath": "_content/ParentTeacherAPI",
+      "RelativePath": "uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "aqd3h3qk6g",
+      "Integrity": "QqVAOy1We2ZZCl2ou92Y2L1GQWhAldZN3VN2RcgE9lU=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png"
+    },
+    {
+      "Identity": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/edit.png",
+      "SourceId": "ParentTeacherAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/",
+      "BasePath": "_content/ParentTeacherAPI",
+      "RelativePath": "uploads/edit#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "pmfjw3e0jh",
+      "Integrity": "4cEb6DDiz3lme3zH+KvZCvHUcdVi21XTuKvA+QYuIC0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploads/edit.png"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.aqd3h3qk6g.png",
+      "AssetFile": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "38837"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"QqVAOy1We2ZZCl2ou92Y2L1GQWhAldZN3VN2RcgE9lU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 18 Mar 2025 16:50:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "aqd3h3qk6g"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-QqVAOy1We2ZZCl2ou92Y2L1GQWhAldZN3VN2RcgE9lU="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png",
+      "AssetFile": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/478ec2b9-f8b7-43e2-b165-5330cc0ab3ee.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "38837"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"QqVAOy1We2ZZCl2ou92Y2L1GQWhAldZN3VN2RcgE9lU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 18 Mar 2025 16:50:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-QqVAOy1We2ZZCl2ou92Y2L1GQWhAldZN3VN2RcgE9lU="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/edit.pmfjw3e0jh.png",
+      "AssetFile": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/edit.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "260655"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"4cEb6DDiz3lme3zH+KvZCvHUcdVi21XTuKvA+QYuIC0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 18 Mar 2025 16:38:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "pmfjw3e0jh"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/edit.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-4cEb6DDiz3lme3zH+KvZCvHUcdVi21XTuKvA+QYuIC0="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/edit.png",
+      "AssetFile": "/Users/siddharth/Repos/ParentTeacherPortal/ParentTeacherAPI/wwwroot/uploads/edit.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "260655"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"4cEb6DDiz3lme3zH+KvZCvHUcdVi21XTuKvA+QYuIC0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 18 Mar 2025 16:38:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-4cEb6DDiz3lme3zH+KvZCvHUcdVi21XTuKvA+QYuIC0="
+        }
+      ]
+    }
+  ]
+}
