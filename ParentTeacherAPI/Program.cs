@@ -5,28 +5,45 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ParentTeacherAPI.Data;
 using ParentTeacherAPI.Models;
+using ParentTeacherAPI.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ✅ 1️⃣ Load Configuration Properly
+
+
+// Ensure configuration is loaded
+var configuration = builder.Configuration;
+configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+
+// ✅ 2️⃣ Add Services to the Container
 builder.Services.AddControllers();
 
-// Configure Entity Framework Core
+// ✅ 3️⃣ Configure Entity Framework Core
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
-// Configure Identity
+// ✅ 4️⃣ Configure Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Configure JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "YourDefaultSuperSecretKey";
-var key = Encoding.UTF8.GetBytes(jwtKey);
+// ✅ 5️⃣ Configure JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"]; // ✅ Matches appsettings.json
 
+if (string.IsNullOrEmpty(jwtKey))
+{
+    Console.WriteLine("❌ JWT Secret key is missing in configuration.");
+    throw new InvalidOperationException("JWT Secret key is missing in configuration.");
+}
+else
+{
+    Console.WriteLine($"✅ JWT Secret key loaded: {jwtKey.Substring(0, 5)}****");
+}
+
+var key = Encoding.UTF8.GetBytes(jwtKey);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -45,7 +62,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Enable CORS
+// ✅ 6️⃣ Register Services AFTER Configuration
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// ✅ 7️⃣ Enable CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
@@ -59,8 +79,8 @@ builder.Services.AddCors(options =>
                       });
 });
 
+// ✅ 8️⃣ Swagger Configuration
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ParentTeacherAPI", Version = "v1" });
@@ -75,26 +95,26 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<FileUploadOperationFilter>();
 });
 
-
-
-
+// ✅ 9️⃣ Set Web Root
 builder.WebHost.UseWebRoot("wwwroot");
-
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ✅ 🔟 Configure Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// ✅ 1️⃣1️⃣ Seed Default Roles & Admin User
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -108,6 +128,7 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole(role));
         }
     }
+
     // ✅ Create a default Admin user if not exists
     string adminEmail = "admin@example.com";
     string adminUsername = "AdminUser";
@@ -137,4 +158,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
+// ✅ 1️⃣2️⃣ Run the Application
 app.Run();

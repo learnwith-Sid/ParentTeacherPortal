@@ -1,50 +1,56 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate(); // ✅ Use for navigation
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
 
     try {
-      const response = await fetch("http://localhost:5029/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
+      const { data } = await axios.post(
+        "http://localhost:5029/api/auth/login",
+        credentials
+      );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(
-          data.message || "Login failed. Please check your credentials."
-        );
-        return;
-      }
-
-      // Store token, username, and roles
+      // Store token, username, and role
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.username);
-      localStorage.setItem("role", data.roles); // ✅ Store it as a string
+      localStorage.setItem("role", data.roles[0]); // Store only the first role as a string
 
-      console.log(localStorage.getItem("roles"));
-      setSuccess(true); // ✅ Show success message instead of redirecting
-    } catch (error) {
-      console.error(error);
-      setError("Something went wrong. Please try again later.");
+      console.log("Role:", data.roles[0]); // Debugging purpose
+
+      // ✅ Redirect based on role
+      if (data.roles.includes("Admin")) {
+        navigate("/dashboard");
+      } else if (data.roles.includes("Teacher")) {
+        navigate("/teacher/dashboard");
+      } else if (data.roles.includes("Parent")) {
+        navigate("/parent/dashboard");
+      } else {
+        navigate("/student/dashboard"); // Default for students
+      }
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
     }
   };
 
   return (
-    <section className="page-section" id="">
+    <section className="page-section">
       <div className="container px-4 px-lg-5 mt-5">
         <div className="row gx-4 gx-lg-5 justify-content-center">
           <div className="col-lg-8 col-xl-6 text-center text-white">
@@ -59,64 +65,49 @@ const Login: React.FC = () => {
         <div className="row gx-4 gx-lg-5 justify-content-center">
           <div className="col-lg-6">
             <form onSubmit={handleSubmit}>
-              {/* Username input */}
               <div className="form-floating mb-3">
                 <input
                   className="form-control"
-                  id="username"
+                  name="username"
                   type="text"
                   placeholder="Enter your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={credentials.username}
+                  onChange={handleChange}
                   required
                 />
-                <label htmlFor="username">Username</label>
-                <div className="invalid-feedback">Username is required.</div>
+                <label>Username</label>
               </div>
 
-              {/* Email input */}
               <div className="form-floating mb-3">
                 <input
                   className="form-control"
-                  id="email"
+                  name="email"
                   type="email"
                   placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={credentials.email}
+                  onChange={handleChange}
                   required
                 />
-                <label htmlFor="email">Email</label>
-                <div className="invalid-feedback">
-                  A valid email is required.
-                </div>
+                <label>Email</label>
               </div>
 
-              {/* Password input */}
               <div className="form-floating mb-3">
                 <input
                   className="form-control"
-                  id="password"
+                  name="password"
                   type="password"
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={credentials.password}
+                  onChange={handleChange}
                   required
                 />
-                <label htmlFor="password">Password</label>
-                <div className="invalid-feedback">Password is required.</div>
+                <label>Password</label>
               </div>
 
-              {/* Error & Success Messages */}
               {error && (
                 <div className="text-danger text-center mb-3">{error}</div>
               )}
-              {success && (
-                <div className="text-success text-center mb-3">
-                  Login successful! You can now access the dashboard.
-                </div>
-              )}
 
-              {/* Submit Button */}
               <div className="d-grid">
                 <button className="btn btn-primary btn-xl" type="submit">
                   Login

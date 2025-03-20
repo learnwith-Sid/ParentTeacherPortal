@@ -1,10 +1,9 @@
+using CsvHelper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using ParentTeacherAPI.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using ParentTeacherAPI.Services;
+using System.Globalization;
 
 namespace ParentTeacherAPI.Controllers
 {
@@ -12,112 +11,98 @@ namespace ParentTeacherAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IAuthService _authService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager)
         {
+            _authService = authService;
             _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
         }
 
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
-            if (string.IsNullOrEmpty(model.Role))
-                return BadRequest("Role is required.");
+            if (model.Role != "Admin")
+                return BadRequest("Only Admin registration is allowed here.");
 
-            // Restrict multiple Admin registrations
-            if (model.Role == "Admin")
-            {
-                var existingAdmin = await _userManager.GetUsersInRoleAsync("Admin");
-                if (existingAdmin.Count > 0)
-                    return BadRequest("Admin already exists. Only one admin can be registered.");
-            }
+            var (success, message) = await _authService.RegisterUserAsync(model);
 
-            var user = new ApplicationUser
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
+            if (!success)
+                return BadRequest(message);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            // Assign the selected role
-            var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
-            if (!roleResult.Succeeded)
-                return BadRequest("Failed to assign role.");
-
-            return Ok("User registered successfully");
+            return Ok("Admin registered successfully.");
         }
-
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-
-            Console.WriteLine($"Login Attempt - Username: {model.Username}, Email: {model.Email}");
-
-            var user = await _userManager.FindByNameAsync(model.Username) ??
-                       await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Username)
+                       ?? await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
-                Console.WriteLine("❌ User not found!");
-                return Unauthorized(new { message = "Invalid username or email" });
+                return Unauthorized(new { message = "Incorrect username or password." });
             }
 
-            Console.WriteLine($"User Found - Username: {user.UserName}, Email: {user.Email}");
-            Console.WriteLine($"Stored Hashed Password: {user.PasswordHash}");
+            var token = await _authService.Login(user, model.Password);
 
-            bool passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
-            Console.WriteLine($"Password Valid: {passwordValid}");
-
-            if (!passwordValid)
+            if (token == "Invalid credentials")
             {
-                Console.WriteLine("❌ Invalid password!");
-                return Unauthorized(new { message = "Incorrect password" });
+                return Unauthorized(new { message = "Incorrect username or password." });
             }
 
-            Console.WriteLine("✅ Login Successful!");
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var authClaims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.UserName),
-        new Claim(ClaimTypes.Email, user.Email)
-    };
-
-            foreach (var role in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            Console.WriteLine($"JWT Key: {_configuration["Jwt:Key"]}");
-
-            var token = new JwtSecurityToken(
-                expires: DateTime.Now.AddHours(3),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
-
-            Console.WriteLine($"Generated Token: {new JwtSecurityTokenHandler().WriteToken(token)}");
+            var roles = await _userManager.GetRolesAsync(user);  // Fetch roles
 
             return Ok(new
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
+                token = token,
                 username = user.UserName,
-                roles = userRoles
+                roles = roles // Include roles in the response
             });
+        }
+
+        [HttpPost("upload-csv")]
+        public async Task<IActionResult> UploadCsv(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Please upload a valid CSV file.");
+
+            var registerModels = new List<RegisterModel>();
+
+            using (var stream = new StreamReader(file.OpenReadStream()))
+            using (var csv = new CsvReader(stream, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap<RegisterModelCsvMap>();
+                registerModels = csv.GetRecords<RegisterModel>().ToList();
+            }
+
+            var errors = new List<string>();
+
+            foreach (var model in registerModels)
+            {
+                if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Username))
+                {
+                    errors.Add("Email or Username is missing.");
+                    continue;
+                }
+
+                if (model.Role != "Teacher" && model.Role != "Parent" && model.Role != "Student")
+                {
+                    errors.Add($"Invalid role for {model.Email}. Allowed roles: Teacher, Parent, Student.");
+                    continue;
+                }
+
+                var (success, message) = await _authService.RegisterUserAsync(model);
+
+                if (!success)
+                    errors.Add($"Error for {model.Email}: {message}");
+            }
+
+            if (errors.Count > 0)
+                return BadRequest(new { message = "Some users were not registered.", errors });
+
+            return Ok(new { message = "Users uploaded and registered successfully!" });
         }
     }
 }

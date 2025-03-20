@@ -10,30 +10,28 @@ import TeacherDashboard from "./pages/teacher/Dashboard";
 import MarkAttendance from "./pages/teacher/MarkAttendance";
 import AttendanceHistory from "./pages/teacher/AttendanceHistory";
 import AdminSettings from "./pages/admin/Settings";
+import BulkUserUpload from "./pages/admin/BulkUserUpload";
 
 const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Rendering App...");
-    console.log("Current route:", location.pathname);
+  // ✅ Define where the navbar should be visible
+  const publicRoutes = ["/", "/login", "/contact-us"];
+  const showNavbar = publicRoutes.includes(location.pathname);
 
+  useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (
-      !token &&
-      location.pathname !== "/" &&
-      location.pathname !== "/contact-us" &&
-      location.pathname !== "/login"
-    ) {
+    // ✅ Redirect unauthenticated users (except on public routes)
+    if (!token && !publicRoutes.includes(location.pathname)) {
       navigate("/login", { replace: true });
     }
-  }, [location.pathname, navigate]); // ✅ Added `navigate` to dependencies
+  }, [location.pathname, navigate]);
 
   return (
     <>
-      <PublicNavbar />
+      {showNavbar && <PublicNavbar />} {/* ✅ Navbar only on public pages */}
       <div className="masthead">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -45,6 +43,7 @@ const App: React.FC = () => {
           <Route path="/MarkAttendance" element={<MarkAttendance />} />
           <Route path="/AttendanceHistory" element={<AttendanceHistory />} />
           <Route path="/admin-settings" element={<AdminSettings />} />
+          <Route path="/user-upload" element={<BulkUserUpload />} />
         </Routes>
       </div>
     </>
