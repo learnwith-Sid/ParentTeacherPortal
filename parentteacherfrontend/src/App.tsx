@@ -11,6 +11,9 @@ import MarkAttendance from "./pages/teacher/MarkAttendance";
 import AttendanceHistory from "./pages/teacher/AttendanceHistory";
 import AdminSettings from "./pages/admin/Settings";
 import BulkUserUpload from "./pages/admin/BulkUserUpload";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ContactUs from "./pages/ContactUs";
+import Announcements from "./pages/admin/Announcements";
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -34,16 +37,32 @@ const App: React.FC = () => {
       {showNavbar && <PublicNavbar />} {/* ✅ Navbar only on public pages */}
       <div className="masthead">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/manage-users" element={<ManageUsers />} />
-          <Route path="/register-admin" element={<RegisterAdmin />} />
-          <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
-          <Route path="/MarkAttendance" element={<MarkAttendance />} />
-          <Route path="/AttendanceHistory" element={<AttendanceHistory />} />
-          <Route path="/admin-settings" element={<AdminSettings />} />
-          <Route path="/user-upload" element={<BulkUserUpload />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+
+          {/* Protected Admin Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/manage-users" element={<ManageUsers />} />
+            <Route path="/admin-settings" element={<AdminSettings />} />
+            <Route path="/user-upload" element={<BulkUserUpload />} />
+            <Route path="/register-admin" element={<RegisterAdmin />} />
+            <Route path="/announcements" element={<Announcements />} />
+          </Route>
+
+          {/* Protected Teacher Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["Teacher"]} />}>
+            <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+            <Route path="/MarkAttendance" element={<MarkAttendance />} />
+            <Route path="/AttendanceHistory" element={<AttendanceHistory />} />
+          </Route>
+
+          {/* Protected Parent Routes (if needed in the future) */}
+          {/* <Route element={<ProtectedRoute allowedRoles={["Parent"]} />}>
+            <Route path="/parent/dashboard" element={<ParentDashboard />} />
+          </Route> */}
         </Routes>
       </div>
     </>

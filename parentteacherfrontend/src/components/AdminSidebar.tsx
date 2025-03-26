@@ -104,6 +104,13 @@ const Sidebar: React.FC = () => {
             )}
           </li>
           <li className="nav-item">
+            <Link className="nav-link" to="/announcements">
+              <i className="fas fa-fw fa-bullhorn"></i>
+              <span>Announcements</span>
+            </Link>
+          </li>
+
+          <li className="nav-item">
             <Link className="nav-link" to="/admin-settings">
               <i className="fas fa-fw fa-cogs"></i>
               <span>Settings</span>

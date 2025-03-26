@@ -26,6 +26,8 @@ const AuthRedirect: React.FC = () => {
           navigate("/teacher/dashboard", { replace: true });
         else if (role === "Parent")
           navigate("/parent/dashboard", { replace: true });
+        else if (role === "Student")
+          navigate("/student/dashboard", { replace: true });
       }
     }
   }, [navigate, location.pathname]); // ✅ Depend on `location.pathname` to track page changes

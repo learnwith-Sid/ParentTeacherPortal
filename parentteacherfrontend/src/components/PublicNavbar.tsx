@@ -49,7 +49,7 @@ const PublicNavbar: React.FC = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">
+              <Link className="nav-link" to="/contact-us">
                 Contact
               </Link>
             </li>
