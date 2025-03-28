@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ParentTeacherAPI.Data;
-
+using ParentTeacherAPI.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ using System.Threading.Tasks;
 public class AnnouncementsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly IHubContext<ChatHub> _hubContext; // ✅ Inject SignalR Hub Context
 
-    public AnnouncementsController(ApplicationDbContext context)
+    public AnnouncementsController(ApplicationDbContext context, IHubContext<ChatHub> hubContext)
     {
         _context = context;
+        _hubContext = hubContext; // ✅ Assign hub context
     }
 
     // ✅ Create Announcement
@@ -57,6 +60,17 @@ public class AnnouncementsController : ControllerBase
 
         _context.Announcements.Add(announcement);
         await _context.SaveChangesAsync();
+
+        if (announcement.TargetAudience == "All")
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", announcement.Title, "All");
+        }
+        else
+        {
+            await _hubContext.Clients.Group(announcement.TargetAudience).SendAsync("ReceiveNotification", announcement.Title, announcement.TargetAudience);
+            Console.WriteLine("added");
+        }
+
 
         return CreatedAtAction(nameof(GetAnnouncement), new { id = announcement.Id }, announcement);
     }

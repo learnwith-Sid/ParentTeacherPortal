@@ -10,13 +10,12 @@ const Home: React.FC = () => {
           <div className="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
             <div className="col-lg-8 align-self-end">
               <h1 className="text-white font-weight-bold">
-                Welcome to Parent-Teacher Portal
+                Welcome to EDU-Nexus
               </h1>
             </div>
             <div className="col-lg-8 align-self-baseline">
               <p className="text-white-75 mb-5">
-                Enhancing communication between parents and teachers for a
-                better education experience.
+                "Bridging Education, Empowering Communication."
               </p>
               <a className="btn btn-primary btn-xl" href="#about">
                 Find Out More
@@ -87,7 +86,8 @@ const Home: React.FC = () => {
       <section className="page-section text-center">
         <div className="container">
           <h2 className="mb-4 text-white">
-            Join the platform and streamline parent-teacher communication.
+            Join the platform and streamline Bridging Education, Empowering
+            Communication.
           </h2>
           <Link to="/contact-us" className="btn btn-primary btn-lg">
             Contact Us

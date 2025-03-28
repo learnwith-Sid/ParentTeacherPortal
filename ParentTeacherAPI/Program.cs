@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ParentTeacherAPI.Data;
+using ParentTeacherAPI.Hubs;
 using ParentTeacherAPI.Models;
 using ParentTeacherAPI.Services;
 using System.Text;
@@ -94,6 +95,7 @@ builder.Services.AddSwaggerGen(c =>
 
     c.OperationFilter<FileUploadOperationFilter>();
 });
+builder.Services.AddSignalR();
 
 // ✅ 9️⃣ Set Web Root
 builder.WebHost.UseWebRoot("wwwroot");
@@ -113,7 +115,7 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapHub<ChatHub>("/chatHub");
 // ✅ 1️⃣1️⃣ Seed Default Roles & Admin User
 using (var scope = app.Services.CreateScope())
 {

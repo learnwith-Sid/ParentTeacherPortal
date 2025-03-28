@@ -115,9 +115,9 @@ const Announcements: React.FC = () => {
                   }
                 >
                   <option value="All">All</option>
-                  <option value="Teachers">Teachers</option>
-                  <option value="Parents">Parents</option>
-                  <option value="Students">Students</option>
+                  <option value="Teacher">Teachers</option>
+                  <option value="Parent">Parents</option>
+                  <option value="Student">Students</option>
                 </select>
               </div>
 

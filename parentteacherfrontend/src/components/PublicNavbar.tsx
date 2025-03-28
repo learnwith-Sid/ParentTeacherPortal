@@ -26,7 +26,7 @@ const PublicNavbar: React.FC = () => {
     >
       <div className="container px-4 px-lg-5">
         <Link className="navbar-brand" to="/">
-          ParentTeacher Portal
+          EduNexus
         </Link>
         <button
           className="navbar-toggler navbar-toggler-right"

@@ -39,8 +39,8 @@ const App: React.FC = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/login" element={<Login />} />
 
           {/* Protected Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
