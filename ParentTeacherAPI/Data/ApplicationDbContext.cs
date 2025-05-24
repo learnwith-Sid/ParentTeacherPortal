@@ -22,6 +22,8 @@ namespace ParentTeacherAPI.Data
         public DbSet<Attendance> Attendance { get; set; }
         public DbSet<Settings> Settings { get; set; }  // ✅ Added Settings table
         public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<Schools> Schools { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

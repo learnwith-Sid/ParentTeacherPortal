@@ -14,6 +14,8 @@ import BulkUserUpload from "./pages/admin/BulkUserUpload";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ContactUs from "./pages/ContactUs";
 import Announcements from "./pages/admin/Announcements";
+import StudentDashboard from "./pages/student/Announcements";
+import SuperAdminDashboard from "./pages/super/SuperAdminDashboard";
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -57,6 +59,12 @@ const App: React.FC = () => {
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route path="/MarkAttendance" element={<MarkAttendance />} />
             <Route path="/AttendanceHistory" element={<AttendanceHistory />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["Student"]} />}>
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["Superuser"]} />}>
+            <Route path="/super/dashboard" element={<SuperAdminDashboard />} />
           </Route>
 
           {/* Protected Parent Routes (if needed in the future) */}

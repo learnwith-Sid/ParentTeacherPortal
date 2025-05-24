@@ -1,6 +1,7 @@
 using CsvHelper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ParentTeacherAPI.Models;
 using ParentTeacherAPI.Services;
 using System.Globalization;
@@ -37,28 +38,31 @@ namespace ParentTeacherAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username)
-                       ?? await _userManager.FindByEmailAsync(model.Email);
+            // Step 1: Find the user
+            var user = await _userManager.Users
+                .FirstOrDefaultAsync(u =>
+                    (u.Email == model.Email || u.UserName == model.Username) &&
+                    (u.IsSuperuser || u.SchoolCode == model.SchoolCode));
 
             if (user == null)
-            {
-                return Unauthorized(new { message = "Incorrect username or password." });
-            }
+                return Unauthorized(new { message = "Incorrect username, password, or school." });
 
-            var token = await _authService.Login(user, model.Password);
+            // Step 2: Attempt login through AuthService
+            var token = await _authService.Login(user, model.Password, model.SchoolCode);
 
             if (token == "Invalid credentials")
-            {
                 return Unauthorized(new { message = "Incorrect username or password." });
-            }
 
-            var roles = await _userManager.GetRolesAsync(user);  // Fetch roles
+            var roles = await _userManager.GetRolesAsync(user);
 
+            // Step 3: Return the token and roles
             return Ok(new
             {
                 token = token,
                 username = user.UserName,
-                roles = roles // Include roles in the response
+                roles = roles,
+                isSuperuser = user.IsSuperuser,
+                schoolCode = user.SchoolCode
             });
         }
 

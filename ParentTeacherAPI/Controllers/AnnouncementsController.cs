@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")] // Only Admins can manage announcements
+// Only Admins and teacher can manage announcements
 public class AnnouncementsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -24,6 +24,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     // ✅ Create Announcement
+    [Authorize(Roles = "Admin,Teacher")]
     [HttpPost]
     public async Task<IActionResult> CreateAnnouncement([FromForm] AnnouncementCreateDto announcementDto)
     {
@@ -94,8 +95,19 @@ public class AnnouncementsController : ControllerBase
         }
         return announcement;
     }
+    [HttpGet("by-role")]
+    public async Task<ActionResult<IEnumerable<Announcement>>> GetAnnouncementsByRole([FromQuery] string role)
+    {
+        return await _context.Announcements
+            .Where(a => a.TargetAudience == role || a.TargetAudience == "All")
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync();
+    }
+
+
 
     // ✅ Update Announcement
+    [Authorize(Roles = "Admin,Teacher")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAnnouncement(int id, [FromForm] AnnouncementCreateDto updatedDto)
     {
@@ -132,6 +144,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     // ✅ Delete Announcement
+    [Authorize(Roles = "Admin,Teacher")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAnnouncement(int id)
     {

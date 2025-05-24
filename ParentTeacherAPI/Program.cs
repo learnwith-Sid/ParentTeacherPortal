@@ -116,13 +116,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
-// ✅ 1️⃣1️⃣ Seed Default Roles & Admin User
+// ✅ 1️⃣1️⃣ Seed Default Roles & Superuser/Admin User
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    string[] roles = new[] { "Admin", "Teacher", "Parent" };
+    // ✅ Define roles
+    string[] roles = new[] { "Superuser", "Admin", "Teacher", "Parent" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -131,28 +132,35 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // ✅ Create a default Admin user if not exists
-    string adminEmail = "admin@example.com";
-    string adminUsername = "AdminUser";
-    string adminPassword = "Admin@123"; // Change before production!
+    // ✅ 1️⃣ Seed Superuser (EduNexus Owner)
+    string superuserEmail = "owner@edunexus.com";
+    string superuserUsername = "EduNexusOwner";
+    string superuserPassword = "Super@123"; // Change before production!
 
-    if (await userManager.FindByEmailAsync(adminEmail) == null)
+    // Check if a Superuser already exists
+    var superuserExists = await userManager.Users.AnyAsync(u => u.IsSuperuser);
+    if (!superuserExists)
     {
-        var adminUser = new ApplicationUser
+        var superuser = new ApplicationUser
         {
-            UserName = adminUsername,
-            Email = adminEmail
+            UserName = superuserUsername,
+            Email = superuserEmail,
+            IsSuperuser = true
         };
 
-        var result = await userManager.CreateAsync(adminUser, adminPassword);
+        // ✅ Hash Password Before Storing
+        var hashedPassword = userManager.PasswordHasher.HashPassword(superuser, superuserPassword);
+        superuser.PasswordHash = hashedPassword;
+
+        var result = await userManager.CreateAsync(superuser);
         if (result.Succeeded)
         {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
-            Console.WriteLine("✅ Admin user created successfully!");
+            await userManager.AddToRoleAsync(superuser, "Superuser");
+            Console.WriteLine("✅ Superuser created successfully!");
         }
         else
         {
-            Console.WriteLine("❌ Failed to create admin user. Errors:");
+            Console.WriteLine("❌ Failed to create Superuser. Errors:");
             foreach (var error in result.Errors)
             {
                 Console.WriteLine($" - {error.Description}");
@@ -160,6 +168,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
 
 // ✅ 1️⃣2️⃣ Run the Application
 app.Run();

@@ -7,9 +7,10 @@ const Login: React.FC = () => {
     username: "",
     email: "",
     password: "",
+    schoolCode: "", // 🆕 Add schoolId here
   });
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // ✅ Use for navigation
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -20,27 +21,31 @@ const Login: React.FC = () => {
     setError("");
 
     try {
+      const payload = {
+        ...credentials,
+        schoolCode: credentials.schoolCode || null, // Convert to null for Superuser
+      };
+
       const { data } = await axios.post(
         "http://localhost:5029/api/auth/login",
-        credentials
+        payload
       );
 
-      // Store token, username, and role
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.username);
-      localStorage.setItem("role", data.roles[0]); // Store only the first role as a string
+      localStorage.setItem("role", data.roles[0]);
+      localStorage.setItem("schoolCode", data.schoolCode); // Optional for non-superusers
 
-      console.log("Role:", data.roles[0]); // Debugging purpose
-
-      // ✅ Redirect based on role
       if (data.roles.includes("Admin")) {
         navigate("/dashboard");
       } else if (data.roles.includes("Teacher")) {
         navigate("/teacher/dashboard");
       } else if (data.roles.includes("Parent")) {
         navigate("/parent/dashboard");
+      } else if (data.roles.includes("Superuser")) {
+        navigate("/super/dashboard");
       } else {
-        navigate("/student/dashboard"); // Default for students
+        navigate("/student/dashboard");
       }
     } catch (err: any) {
       setError(
@@ -73,9 +78,8 @@ const Login: React.FC = () => {
                   placeholder="Enter your username"
                   value={credentials.username}
                   onChange={handleChange}
-                  required
                 />
-                <label>Username</label>
+                <label>Username (optional)</label>
               </div>
 
               <div className="form-floating mb-3">
@@ -102,6 +106,18 @@ const Login: React.FC = () => {
                   required
                 />
                 <label>Password</label>
+              </div>
+
+              <div className="form-floating mb-3">
+                <input
+                  className="form-control"
+                  name="schoolCode"
+                  type="text"
+                  placeholder="Enter your school ID"
+                  value={credentials.schoolCode}
+                  onChange={handleChange}
+                />
+                <label>School ID (leave blank for Superuser)</label>
               </div>
 
               {error && (

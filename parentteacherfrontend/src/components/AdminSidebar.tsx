@@ -5,6 +5,7 @@ const Sidebar: React.FC = () => {
   const [isUsersOpen, setIsUsersOpen] = useState(false);
   const [isStudentsOpen, setIsStudentsOpen] = useState(false);
   const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
+  const [isAssignmentsOpen, setIsAssignmentsOpen] = useState(false);
   const [platformName, setPlatformName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
 
@@ -205,11 +206,106 @@ const Sidebar: React.FC = () => {
           </li>
         </>
       )}
+      {/* Student-Specific Links */}
+      {role === "Student" && (
+        <>
+          <div className="sidebar-heading">Student Features</div>
+
+          <li className={`nav-item ${isAssignmentsOpen ? "active" : ""}`}>
+            <a
+              className="nav-link"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsAssignmentsOpen(!isAssignmentsOpen);
+              }}
+            >
+              <i className="fas fa-fw fa-tasks"></i>
+              <span>Assignments</span>
+              <i
+                className={`fas fa-chevron-${
+                  isAssignmentsOpen ? "down" : "right"
+                }`}
+              ></i>
+            </a>
+            {isAssignmentsOpen && (
+              <div className="bg-white py-2 collapse-inner rounded collapse show">
+                <Link className="dropdown-item" to="/student-assignments">
+                  View Assignments
+                </Link>
+                <Link
+                  className="dropdown-item"
+                  to="/student-submit-assignments"
+                >
+                  Submit Assignments
+                </Link>
+              </div>
+            )}
+          </li>
+
+          <li className={`nav-item ${isAttendanceOpen ? "active" : ""}`}>
+            <a
+              className="nav-link"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsAttendanceOpen(!isAttendanceOpen);
+              }}
+            >
+              <i className="fas fa-fw fa-calendar-check"></i>
+              <span>Attendance</span>
+              <i
+                className={`fas fa-chevron-${
+                  isAttendanceOpen ? "down" : "right"
+                }`}
+              ></i>
+            </a>
+            {isAttendanceOpen && (
+              <div className="bg-white py-2 collapse-inner rounded collapse show">
+                <Link className="dropdown-item" to="/student-attendance">
+                  Daily Attendance
+                </Link>
+                <Link
+                  className="dropdown-item"
+                  to="/student-attendance-history"
+                >
+                  Attendance History
+                </Link>
+              </div>
+            )}
+          </li>
+
+          <li className="nav-item">
+            <Link className="nav-link" to="/student-messages">
+              <i className="fas fa-fw fa-envelope"></i>
+              <span>Messages</span>
+            </Link>
+          </li>
+
+          <li className="nav-item">
+            <Link className="nav-link" to="/student-reports">
+              <i className="fas fa-fw fa-chart-line"></i>
+              <span>Performance Reports</span>
+            </Link>
+          </li>
+
+          <li className="nav-item">
+            <Link className="nav-link" to="/student-announcements">
+              <i className="fas fa-fw fa-bullhorn"></i>
+              <span>Announcements</span>
+            </Link>
+          </li>
+        </>
+      )}
 
       {/* Logout */}
       <li className="nav-item">
-        <button className="btn btn-outline-light" onClick={handleLogout}>
-          Logout
+        <button
+          className="btn btn-danger w-100 d-flex align-items-center justify-content-center"
+          onClick={handleLogout}
+          style={{ padding: "10px", borderRadius: "5px", fontWeight: "bold" }}
+        >
+          <i className="fas fa-sign-out-alt mr-2"></i> Logout
         </button>
       </li>
 

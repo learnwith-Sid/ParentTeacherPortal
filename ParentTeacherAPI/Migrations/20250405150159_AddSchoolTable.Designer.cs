@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ParentTeacherAPI.Data;
 
@@ -10,9 +11,11 @@ using ParentTeacherAPI.Data;
 namespace ParentTeacherAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250405150159_AddSchoolTable")]
+    partial class AddSchoolTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -100,8 +103,8 @@ namespace ParentTeacherAPI.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SchoolCode")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("SchoolId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");

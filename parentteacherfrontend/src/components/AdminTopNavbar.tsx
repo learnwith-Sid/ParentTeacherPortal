@@ -88,7 +88,15 @@ const TopNavbar: React.FC = () => {
               )}
               <div className="dropdown-divider"></div>
               <Link
-                to="/announcements"
+                to={
+                  role === "Admin"
+                    ? "/announcements"
+                    : role === "Teacher"
+                    ? "/teacher/announcements"
+                    : role === "Parent"
+                    ? "/parent/announcements"
+                    : "/student/announcements" // Default to student if none match
+                }
                 className="dropdown-item text-center small"
               >
                 View all announcements
