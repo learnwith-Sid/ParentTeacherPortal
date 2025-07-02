@@ -20,7 +20,7 @@ Make sure you have the following installed:
 ### 🔧 Backend
 
 - [.NET 7 SDK](https://dotnet.microsoft.com/download)
-- [Visual Studio 2022+](https://visualstudio.microsoft.com/) with ASP.NET & EF Core workloads
+- [Visual Studio Code](https://visualstudio.microsoft.com/) with ASP.NET & EF Core workloads
 - EF CLI (optional but helpful):
 
   ```bash
